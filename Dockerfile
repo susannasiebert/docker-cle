@@ -49,7 +49,7 @@ RUN wget https://github.com/Illumina/strelka/releases/download/v2.7.1/strelka-2.
     && mv strelka-2.7.1.centos5_x86_64 $STRELKA_INSTALL_DIR
 
 #strelka requires a couple steps to run, so add a helper script to sequence those
-COPY strelka_helper.pl /usr/bin/
+COPY strelka_helper.pl /usr/bin/strelka_helper.pl
 
 ###############
 #Varscan 2.4.2#
@@ -63,6 +63,8 @@ ENV VARSCAN_INSTALL_DIR=/opt/varscan
 WORKDIR $VARSCAN_INSTALL_DIR
 RUN wget https://github.com/dkoboldt/varscan/releases/download/2.4.2/VarScan.v2.4.2.jar && \
     ln -s VarScan.v2.4.2.jar VarScan.jar
+
+COPY intervals_to_bed.pl /usr/bin/intervals_to_bed.pl
 
 ##############
 #HTSlib 1.3.2#
@@ -124,6 +126,8 @@ RUN ./INSTALL $SAMTOOLS_INSTALL_DIR/software/htslib-1.3.2
 WORKDIR /
 RUN ln -s /opt/pindel-0.2.5b8/pindel /usr/bin/pindel
 RUN ln -s /opt/pindel-0.2.5b8/pindel2vcf /usr/bin/pindel2vcf
+
+COPY write_pindel_filter_config.pl /usr/bin/write_pindel_filter_config.pl
 
 ##########
 #fpfilter#
@@ -215,6 +219,8 @@ RUN ant clean all && \
     rm -rf src && \
     rm -rf lib && \
     rm build.xml
+
+COPY split_interval_list_helper.pl /usr/bin/split_interval_list_helper.pl
 
 
 RUN apt-get install -y libnss-sss
