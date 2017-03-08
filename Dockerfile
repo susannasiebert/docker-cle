@@ -161,6 +161,30 @@ RUN perl INSTALL.pl --NO_HTSLIB
 WORKDIR /
 RUN ln -s /opt/vep/ensembl-tools-release-86/scripts/variant_effect_predictor/variant_effect_predictor.pl /usr/bin/variant_effect_predictor.pl
 
+################
+#bcftools 1.3.1#
+################
+RUN apt-get update && apt-get install -y \
+    bzip2 \
+    g++ \
+    make \
+    ncurses-dev \
+    wget \
+    zlib1g-dev
+
+ENV BCFTOOLS_INSTALL_DIR=/opt/bcftools
+
+WORKDIR /tmp
+RUN wget https://github.com/samtools/bcftools/releases/download/1.3.1/bcftools-1.3.1.tar.bz2 && \
+    tar --bzip2 -xf bcftools-1.3.1.tar.bz2
+
+WORKDIR /tmp/bcftools-1.3.1
+RUN make prefix=$BCFTOOLS_INSTALL_DIR && \
+    make prefix=$BCFTOOLS_INSTALL_DIR install
+
+WORKDIR /
+RUN rm -rf /tmp/bcftools-1.3.1
+
 
 RUN apt-get install -y libnss-sss
 RUN ln -sf /usr/share/zoneinfo/America/Chicago /etc/localtime
