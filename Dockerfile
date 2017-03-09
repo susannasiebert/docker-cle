@@ -194,6 +194,7 @@ COPY split_interval_list_helper.pl /usr/bin/split_interval_list_helper.pl
 RUN apt-get install -y python-pip python-dev build-essential
 RUN pip install --upgrade pip
 RUN pip install toil[cwl]
+RUN sed -i 's/select\[type==X86_64 && mem/select[mem/' /usr/local/lib/python2.7/dist-packages/toil/batchSystems/lsf.py
 
 
 RUN apt-get install -y libnss-sss
