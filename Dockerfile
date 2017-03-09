@@ -188,6 +188,13 @@ RUN ant clean all && \
 
 COPY split_interval_list_helper.pl /usr/bin/split_interval_list_helper.pl
 
+######
+#Toil#
+######
+RUN apt-get install -y python-pip python-dev build-essential
+RUN pip install --upgrade pip
+RUN pip install toil[cwl]
+
 
 RUN apt-get install -y libnss-sss
 RUN ln -sf /usr/share/zoneinfo/America/Chicago /etc/localtime
