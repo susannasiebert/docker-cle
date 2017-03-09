@@ -5,11 +5,31 @@ LABEL \
     description="Image for tools used in the CLE"
 
 RUN apt-get update -y
+RUN apt-get install -y \
+    wget \
+    git \
+    unzip \
+    bzip2 \
+    g++ \
+    make \
+    zlib1g-dev \
+    ncurses-dev \
+    perl-doc \
+    python \
+    rsync \
+    default-jdk \
+    default-jre \
+    bioperl \
+    libfile-copy-recursive-perl \
+    libarchive-extract-perl \
+    libarchive-zip-perl \
+    libapache-dbi-perl \
+    curl \
+    ant
 
 ##########
 #GATK 3.6#
 ##########
-RUN apt-get install -y wget default-jdk git unzip
 ENV maven_package_name apache-maven-3.3.9
 ENV gatk_dir_name gatk-protected
 ENV gatk_version 3.6
@@ -31,16 +51,6 @@ RUN cd /opt/ && unzip /tmp/${maven_package_name}-bin.zip \
 ###############
 #Strelka 2.7.1#
 ###############
-RUN apt-get update && apt-get install -y \
-    bzip2 \
-    g++ \
-    make \
-    perl-doc \
-    python \
-    rsync \
-    wget \
-    zlib1g-dev
-
 ENV STRELKA_INSTALL_DIR /opt/strelka/
 
 RUN wget https://github.com/Illumina/strelka/releases/download/v2.7.1/strelka-2.7.1.centos5_x86_64.tar.bz2 \
@@ -54,10 +64,6 @@ COPY strelka_helper.pl /usr/bin/strelka_helper.pl
 ###############
 #Varscan 2.4.2#
 ###############
-RUN apt-get update && apt-get install -y \
-    default-jre \
-    wget
-
 ENV VARSCAN_INSTALL_DIR=/opt/varscan
 
 WORKDIR $VARSCAN_INSTALL_DIR
@@ -83,14 +89,6 @@ RUN ./configure  --enable-plugins --prefix=$HTSLIB_INSTALL_DIR && \
 ################
 #Samtools 1.3.1#
 ################
-RUN apt-get update && apt-get install -y \
-    bzip2 \
-    g++ \
-    make \
-    ncurses-dev \
-    wget \
-    zlib1g-dev
-
 ENV SAMTOOLS_INSTALL_DIR=/opt/samtools
 
 WORKDIR /tmp
@@ -108,14 +106,6 @@ RUN rm -rf /tmp/samtools-1.3.1
 ################
 #Pindel 0.2.5b8#
 ################
-RUN apt-get update && apt-get install -y \
-    bzip2 \
-    wget \
-    make \
-    ncurses-dev \
-    zlib1g-dev \
-    g++
-
 WORKDIR /opt
 RUN wget https://github.com/genome/pindel/archive/v0.2.5b8.tar.gz && \
     tar -xzf v0.2.5b8.tar.gz
@@ -143,17 +133,6 @@ RUN ln -s $SAMTOOLS_INSTALL_DIR/bin/tabix /usr/bin/tabix
 ########
 #VEP 86#
 ########
-RUN apt-get update && \
-    apt-get install -y \
-    bioperl \
-    wget \
-    unzip \
-    libfile-copy-recursive-perl \
-    libarchive-extract-perl \
-    libarchive-zip-perl \
-    libapache-dbi-perl \
-    curl
-
 RUN mkdir /opt/vep/
 
 WORKDIR /opt/vep
@@ -169,14 +148,6 @@ RUN ln -s /opt/vep/ensembl-tools-release-86/scripts/variant_effect_predictor/var
 ################
 #bcftools 1.3.1#
 ################
-RUN apt-get update && apt-get install -y \
-    bzip2 \
-    g++ \
-    make \
-    ncurses-dev \
-    wget \
-    zlib1g-dev
-
 ENV BCFTOOLS_INSTALL_DIR=/opt/bcftools
 
 WORKDIR /tmp
@@ -196,12 +167,6 @@ RUN rm -rf /tmp/bcftools-1.3.1
 ENV picard_version 2.4.1
 
 # Install ant, git for building
-RUN apt-get update && \
-    apt-get --no-install-recommends install -y --force-yes \
-    git \
-    ant && \
-    apt-get clean autoclean && \
-    apt-get autoremove -y
 
 # Assumes Dockerfile lives in root of the git repo. Pull source files into
 # container
