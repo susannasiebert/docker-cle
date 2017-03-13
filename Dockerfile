@@ -85,7 +85,8 @@ RUN wget https://github.com/samtools/htslib/releases/download/1.3.2/htslib-1.3.2
 WORKDIR /tmp/htslib-1.3.2
 RUN ./configure  --enable-plugins --prefix=$HTSLIB_INSTALL_DIR && \
     make && \
-    make install
+    make install && \
+    cp $HTSLIB_INSTALL_DIR/lib/libhts.so* /usr/lib/
 
 ################
 #Samtools 1.3.1#
