@@ -18,14 +18,14 @@ if [ -z ${4+x} ]
 then
     #run without ROI
     java -jar /opt/varscan/VarScan.jar somatic \
-        <(/usr/bin/samtools mpileup --no-baq -f "$REFERENCE" "$NORMAL_BAM" "$TUMOR_BAM") \
+        <(/opt/samtools/bin/samtools mpileup --no-baq -f "$REFERENCE" "$NORMAL_BAM" "$TUMOR_BAM") \
         $OUTPUT \
         --mpileup 1 \
         --output-vcf
 else
     ROI_BED="$4"
     java -jar /opt/varscan/VarScan.jar somatic \
-        <(/usr/bin/samtools mpileup --no-baq -l "$ROI_BED" -f "$REFERENCE" "$NORMAL_BAM" "$TUMOR_BAM") \
+        <(/opt/samtools/bin/samtools mpileup --no-baq -l "$ROI_BED" -f "$REFERENCE" "$NORMAL_BAM" "$TUMOR_BAM") \
         $OUTPUT \
         --mpileup 1 \
         --output-vcf
