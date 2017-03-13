@@ -71,6 +71,7 @@ RUN wget https://github.com/dkoboldt/varscan/releases/download/2.4.2/VarScan.v2.
     ln -s VarScan.v2.4.2.jar VarScan.jar
 
 COPY intervals_to_bed.pl /usr/bin/intervals_to_bed.pl
+COPY varscan_helper.sh /usr/bin/varscan_helper.sh
 
 ##############
 #HTSlib 1.3.2#
