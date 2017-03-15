@@ -2,8 +2,6 @@
 
 use strict;
 
-use File::Spec;
-
 use feature qw(say);
 
 unless(@ARGV and int($ARGV[0])) {
@@ -14,11 +12,7 @@ unless(@ARGV and int($ARGV[0])) {
 my $num_cpus = shift(@ARGV);
 my $rundir = shift(@ARGV);
 
-my $configure_script = File::Spec->join(
-    $ENV{STRELKA_INSTALL_DIR},
-    'bin',
-    'configureStrelkaSomaticWorkflow.py'
-);
+my $configure_script = '/opt/strelka/bin/configureStrelkaSomaticWorkflow.py';
 
 system($configure_script, "--runDir=${rundir}", @ARGV) == 0
     or die('Failed to configure.');
