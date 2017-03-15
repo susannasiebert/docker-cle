@@ -34,8 +34,8 @@ my $output_file;
 my $bam_file;
 my $bam_index;
 my $sample;
-my $bam_readcount_path = 'bam-readcount';
-my $samtools_path = 'samtools';
+my $bam_readcount_path = '/usr/bin/bam-readcount';
+my $samtools_path = '/opt/samtools/bin/samtools';
 my $ref_fasta;
 my $help;
 
