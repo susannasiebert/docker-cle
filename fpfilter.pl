@@ -7,6 +7,7 @@ use Getopt::Long;
 use IO::File;
 use File::Temp qw( tempdir );
 use File::Spec;
+use File::Basename qw( fileparse );
 use Cwd qw( abs_path cwd);
 
 ## Define filtering parameters ##
@@ -182,8 +183,9 @@ while(my $entry = $input->getline) {
 
     if(length($ref) > 1 || length($var) > 1) {
         #it's an indel or mnp
-        if(length($ref) == length($var)) {
-            die "MNPs unsupported\n";
+        if( (length($ref) == length($var)) || (length($ref) > 1 && length($var) > 1) ) {
+            print STDERR 'Complex variant or MNP will be skipped: '. $chrom ."\t". $pos ."\t". $ref ."\t". $var ."\n";
+            next;
         }
         elsif(length($ref) > length($var)) {
             #it's a deletion
@@ -542,6 +544,7 @@ sub filter_sites_in_hash {
 
 sub setup_workdir {
     my ($reference, $bam_file, $bam_index) = @_;
+
     $reference = abs_path($reference);
     $bam_file = abs_path($bam_file);
     $bam_index = abs_path($bam_index) if $bam_index;
@@ -564,15 +567,22 @@ sub setup_workdir {
     my $working_bam = File::Spec->catfile($dir, "tumor.bam");
     my $working_bam_index = File::Spec->catfile($dir, "tumor.bam.bai");
     symlink $bam_file, $working_bam;
-    if($bam_index) {
-        symlink $bam_index, $working_bam_index;
+
+    unless ($bam_index) {
+        my ($bam_filename,$bam_path,$bam_suffix) = File::Basename::fileparse($bam_file,qr/\.bam/);
+        $bam_index = File::Spec->catfile($bam_path,$bam_filename .'.bai');
+        unless (-e $bam_index) {
+            $bam_index = $bam_file .'.bai';
+        }
     }
-    elsif(-e $bam_file . ".bai") {
-        symlink $bam_file . ".bai", $working_bam_index;
+
+    if (-e $bam_index) {
+        symlink $bam_index, $working_bam_index;
     }
     else {
         index_bam($working_bam);
     }
+
     return ($dir, $working_reference, $working_bam);
 }
 
