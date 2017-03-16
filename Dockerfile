@@ -130,7 +130,7 @@ COPY fpfilter.pl /usr/bin/fpfilter.pl
 #######
 #tabix#
 #######
-RUN ln -s $SAMTOOLS_INSTALL_DIR/bin/tabix /usr/bin/tabix
+RUN ln -s $HTSLIB_INSTALL_DIR/bin/tabix /usr/bin/tabix
 
 ########
 #VEP 86#
