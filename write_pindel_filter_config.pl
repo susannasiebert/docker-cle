@@ -18,7 +18,7 @@ say $config_fh "hom=6";
 say $config_fh "pindel2vcf=/usr/bin/pindel2vcf";
 say $config_fh "reference=$reference";
 say $config_fh "referencename=GRCh38DH"; #FIXME should match reference
-say $config_fh "referencename=20161216";
+say $config_fh "referencedate=20161216";
 say $config_fh "output=$outdir/pindel.out.vcf";
 
 close($config_fh);
