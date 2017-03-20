@@ -122,6 +122,7 @@ RUN ln -s /opt/pindel-0.2.5b8/pindel2vcf /usr/bin/pindel2vcf
 
 COPY pindel_helper.pl /usr/bin/pindel_helper.pl
 COPY write_pindel_filter_config.pl /usr/bin/write_pindel_filter_config.pl
+COPY somatic_indelfilter.pl /usr/bin/somatic_indelfilter.pl
 
 ###############
 #bam-readcount#
