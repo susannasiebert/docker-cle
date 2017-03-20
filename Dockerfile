@@ -120,6 +120,7 @@ RUN rm -rf /tmp/htslib-1.3.2
 RUN ln -s /opt/pindel-0.2.5b8/pindel /usr/bin/pindel
 RUN ln -s /opt/pindel-0.2.5b8/pindel2vcf /usr/bin/pindel2vcf
 
+COPY pindel_helper.pl /usr/bin/pindel_helper.pl
 COPY write_pindel_filter_config.pl /usr/bin/write_pindel_filter_config.pl
 
 ###############
