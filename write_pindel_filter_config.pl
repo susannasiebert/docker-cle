@@ -1,3 +1,8 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
 use feature qw(say);
 
 die("wrong number of arguments") unless scalar(@ARGV) == 3;
