@@ -4,8 +4,7 @@ MAINTAINER Susanna Kiwala <ssiebert@wustl.edu>
 LABEL \
     description="Image for tools used in the CLE"
 
-RUN apt-get update -y
-RUN apt-get install -y \
+RUN apt-get update -y && apt-get install -y \
     wget \
     git \
     unzip \
