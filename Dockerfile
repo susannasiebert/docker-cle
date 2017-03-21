@@ -229,3 +229,21 @@ RUN ln -sf /usr/share/zoneinfo/America/Chicago /etc/localtime
 #     The above /etc/localtime is not enough.
 RUN echo "America/Chicago" > /etc/timezone
 RUN dpkg-reconfigure --frontend noninteractive tzdata
+
+#############
+#verifyBamId#
+#############
+RUN apt-get update && apt-get install -y build-essential gcc-multilib apt-utils zlib1g-dev git
+
+RUN cd /tmp/ && git clone https://github.com/statgen/verifyBamID.git && git clone https://github.com/statgen/libStatGen.git
+
+RUN cd /tmp/libStatGen && git checkout tags/v1.0.14
+
+RUN cd /tmp/verifyBamID && git checkout tags/v1.1.3 && make
+
+RUN cp /tmp/verifyBamID/bin/verifyBamID /usr/local/bin
+
+RUN rm -rf /tmp/verifyBamID /tmp/libStatGen
+
+ADD test.sh /
+RUN chmod 755 /test.sh
