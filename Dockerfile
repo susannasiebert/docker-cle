@@ -243,6 +243,3 @@ RUN cd /tmp/verifyBamID && git checkout tags/v1.1.3 && make
 RUN cp /tmp/verifyBamID/bin/verifyBamID /usr/local/bin
 
 RUN rm -rf /tmp/verifyBamID /tmp/libStatGen
-
-ADD test.sh /
-RUN chmod 755 /test.sh
