@@ -1,6 +1,7 @@
 use File::Copy;
 
-system('/usr/bin/java', '-jar', '/usr/picard/picard.jar', 'IntervalListTools', @ARGV);
+my $retval = system('/usr/bin/java', '-jar', '/usr/picard/picard.jar', 'IntervalListTools', @ARGV);
+exit $retval if $retval != 0;
 
 my $i = 1;
 for(glob('*/scattered.interval_list')) {
