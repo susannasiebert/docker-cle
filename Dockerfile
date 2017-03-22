@@ -243,3 +243,10 @@ RUN cd /tmp/verifyBamID && git checkout tags/v1.1.3 && make
 RUN cp /tmp/verifyBamID/bin/verifyBamID /usr/local/bin
 
 RUN rm -rf /tmp/verifyBamID /tmp/libStatGen
+
+###
+#R#
+###
+
+RUN apt-get update && apt-get install -y r-base littler \
+  && find /var/cache/apt /var/lib/apt/lists -type f -print0 | xargs -0 --no-run-if-empty rm -f
