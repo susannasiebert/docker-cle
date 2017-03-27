@@ -248,5 +248,6 @@ RUN rm -rf /tmp/verifyBamID /tmp/libStatGen
 #R#
 ###
 
-RUN apt-get update && apt-get install -y r-base littler \
-  && find /var/cache/apt /var/lib/apt/lists -type f -print0 | xargs -0 --no-run-if-empty rm -f
+RUN apt-get update && apt-get install -y r-base littler
+
+RUN apt-get install -y lib32ncurses5 
