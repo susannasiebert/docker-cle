@@ -154,6 +154,11 @@ COPY fpfilter.pl /usr/bin/fpfilter.pl
 #######
 RUN ln -s $HTSLIB_INSTALL_DIR/bin/tabix /usr/bin/tabix
 
+######
+#docm#
+######
+COPY docm_filter.pl /usr/bin/docm_filter.pl
+
 ########
 #VEP 86#
 ########
