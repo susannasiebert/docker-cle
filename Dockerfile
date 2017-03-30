@@ -226,7 +226,7 @@ RUN pip install toil[cwl]
 RUN sed -i 's/select\[type==X86_64 && mem/select[mem/' /usr/local/lib/python2.7/dist-packages/toil/batchSystems/lsf.py
 
 
-RUN apt-get install -y libnss-sss
+RUN apt-get update -y && apt-get install -y libnss-sss
 RUN ln -sf /usr/share/zoneinfo/America/Chicago /etc/localtime
 
 #LSF: Java bug that need to change the /etc/timezone.
