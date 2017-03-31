@@ -15,8 +15,15 @@ open(my $docm_filter_fh, ">", "$outdir/docm_filter_out.vcf")
 
 while (<$docm_vcf_fh>) {
     chomp;
-    if (/^#/) {
+    if (/^##/) {
         say $docm_filter_fh $_;
+    }
+    elsif (/^#CHROM/) {
+        my @columns = split /\t/, $_;
+        $columns[9]  = 'NORMAL';
+        $columns[10] = 'TUMOR';
+        my $header = join "\t", @columns;
+        say $docm_filter_fh $header;
     }
     else {
         my @columns = split /\t/, $_;
