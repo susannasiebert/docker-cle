@@ -174,6 +174,10 @@ RUN perl INSTALL.pl --NO_HTSLIB
 WORKDIR /
 RUN ln -s /opt/vep/ensembl-tools-release-86/scripts/variant_effect_predictor/variant_effect_predictor.pl /usr/bin/variant_effect_predictor.pl
 
+RUN mkdir -p /opt/lib/perl/VEP/Plugins
+COPY Downstream.pm /opt/lib/perl/VEP/Plugins/Downstream.pm
+COPY Wildtype.pm /opt/lib/perl/VEP/Plugins/Wildtype.pm
+
 ################
 #bcftools 1.3.1#
 ################
