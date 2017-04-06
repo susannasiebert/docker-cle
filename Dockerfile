@@ -147,7 +147,10 @@ RUN git clone https://github.com/genome/bam-readcount.git /tmp/bam-readcount-0.7
 ##########
 #fpfilter#
 ##########
-COPY fpfilter.pl /usr/bin/fpfilter.pl
+WORKDIR /opt
+RUN wget --no-check-certificate https://raw.githubusercontent.com/genome/fpfilter-tool/v0.1.0/fpfilter.pl && \
+    cp fpfilter.pl /usr/bin/fpfilter.pl && \
+    rm fpfilter.pl
 
 #######
 #tabix#
