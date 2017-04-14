@@ -143,6 +143,7 @@ RUN git clone https://github.com/genome/bam-readcount.git /tmp/bam-readcount-0.7
     rm -rf /tmp/bam-readcount-0.7.4 && \
     ln -s /opt/bam-readcount/bin/bam-readcount /usr/bin/bam-readcount
 
+COPY bam_readcount_helper.py /usr/bin/bam_readcount_helper.py
 
 ##########
 #fpfilter#
