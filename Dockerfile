@@ -145,6 +145,10 @@ RUN git clone https://github.com/genome/bam-readcount.git /tmp/bam-readcount-0.7
 
 COPY bam_readcount_helper.py /usr/bin/bam_readcount_helper.py
 
+RUN apt-get update -y && apt-get install -y python-pip python-dev
+RUN pip install --upgrade pip
+RUN pip install cyvcf2
+
 ##########
 #fpfilter#
 ##########
