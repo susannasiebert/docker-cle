@@ -5,7 +5,7 @@ import os
 from cyvcf2 import VCF
 import tempfile
 import csv
-from subprocess import run, PIPE
+from subprocess import Popen, PIPE
 
 def generate_region_list(hash):
     fh = tempfile.NamedTemporaryFile('w', delete=False)
@@ -24,9 +24,9 @@ def filter_sites_in_hash(region_list, bam_file, ref_fasta, output_dir, insertion
     else:
         output_file = os.path.join(output_dir, 'bam_readcount_snv.tsv')
     bam_readcount_cmd.append(bam_file)
-    execution = run(bam_readcount_cmd, stdout=PIPE, check=True)
+    execution = Popen(bam_readcount_cmd, stdout=PIPE)
     with open(output_file, 'wb') as output_fh:
-        output_fh.write(execution.stdout)
+        output_fh.write(execution.communicate()[0])
 
 
 (script_name, vcf_filename, sample, ref_fasta, bam_file, output_dir)= sys.argv
