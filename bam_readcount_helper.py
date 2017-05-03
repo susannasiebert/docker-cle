@@ -24,9 +24,13 @@ def filter_sites_in_hash(region_list, bam_file, ref_fasta, output_dir, insertion
     else:
         output_file = os.path.join(output_dir, 'bam_readcount_snv.tsv')
     bam_readcount_cmd.append(bam_file)
-    execution = Popen(bam_readcount_cmd, stdout=PIPE)
-    with open(output_file, 'wb') as output_fh:
-        output_fh.write(execution.communicate()[0])
+    execution = Popen(bam_readcount_cmd, stdout=PIPE, stderr=PIPE)
+    stdout, stderr = execution.communicate()
+    if execution.returncode == 0:
+        with open(output_file, 'wb') as output_fh:
+            output_fh.write(execution.communicate()[0])
+    else:
+        sys.exit(stderr)
 
 
 (script_name, vcf_filename, sample, ref_fasta, bam_file, output_dir)= sys.argv
