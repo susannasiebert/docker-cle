@@ -268,3 +268,7 @@ RUN rm -rf /tmp/verifyBamID /tmp/libStatGen
 RUN apt-get update && apt-get install -y r-base littler
 
 RUN apt-get install -y lib32ncurses5 
+
+
+COPY job.py /usr/local/lib/python2.7/dist-packages/cwltool/job.py
+COPY process.py /usr/local/lib/python2.7/dist-packages/cwltool/process.py
