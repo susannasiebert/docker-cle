@@ -62,6 +62,7 @@ RUN wget https://github.com/Illumina/strelka/releases/download/v2.7.1/strelka-2.
 
 #strelka requires a couple steps to run, so add a helper script to sequence those
 COPY strelka_helper.pl /usr/bin/strelka_helper.pl
+COPY add_strelka_gt.pl /usr/bin/add_strelka_gt.pl
 
 ###############
 #Varscan 2.4.2#
