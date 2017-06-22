@@ -47,7 +47,11 @@ for variant in vcf_file:
         vep[chr][pos] = {}
 
     if ref not in vep[chr][pos]:
-        vep[chr][pos][ref] = parse_csq_entries(variant.INFO.get('CSQ').split(','), csq_fields)
+        csq = variant.INFO.get('CSQ')
+        if csq is not None:
+            vep[chr][pos][ref] = parse_csq_entries(csq.split(','), csq_fields)
+        else:
+            vep[chr][pos][ref] = None
     else:
         sys.exit("VEP entry for at CHR %s, POS %s, REF %s already exists" % (chr, pos, ref) )
 
