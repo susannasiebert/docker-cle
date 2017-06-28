@@ -170,19 +170,19 @@ RUN ln -s $HTSLIB_INSTALL_DIR/bin/tabix /usr/bin/tabix
 COPY docm_filter.pl /usr/bin/docm_filter.pl
 
 ########
-#VEP 86#
+#VEP 87#
 ########
 RUN mkdir /opt/vep/
-
 WORKDIR /opt/vep
-RUN wget https://github.com/Ensembl/ensembl-tools/archive/release/86.zip && \
-    unzip 86.zip
 
-WORKDIR /opt/vep/ensembl-tools-release-86/scripts/variant_effect_predictor/
-RUN perl INSTALL.pl --NO_HTSLIB
+RUN git clone https://github.com/Ensembl/ensembl-vep.git
+WORKDIR /opt/vep/ensembl-vep
+RUN git checkout postreleasefix/87
+
+RUN perl INSTALL.pl --NO_UPDATE --NO_HTSLIB
 
 WORKDIR /
-RUN ln -s /opt/vep/ensembl-tools-release-86/scripts/variant_effect_predictor/variant_effect_predictor.pl /usr/bin/variant_effect_predictor.pl
+RUN ln -s /opt/vep/ensembl-vep/vep.pl /usr/bin/variant_effect_predictor.pl
 
 RUN mkdir -p /opt/lib/perl/VEP/Plugins
 COPY Downstream.pm /opt/lib/perl/VEP/Plugins/Downstream.pm
