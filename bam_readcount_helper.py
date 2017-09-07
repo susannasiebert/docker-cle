@@ -69,13 +69,13 @@ for variant in vcf_file:
         else:
             #it's an insertion
             var = "+%s" % var[1:]
-            if chr not in rc_for_indel:
-                rc_for_indel[chr] = {}
-            if pos not in rc_for_indel[chr]:
-                rc_for_indel[chr][pos] = {}
-            if ref not in rc_for_indel[chr][pos]:
-                rc_for_indel[chr][pos][ref] = {}
-            rc_for_indel[chr][pos][ref] = variant
+        if chr not in rc_for_indel:
+            rc_for_indel[chr] = {}
+        if pos not in rc_for_indel[chr]:
+            rc_for_indel[chr][pos] = {}
+        if ref not in rc_for_indel[chr][pos]:
+            rc_for_indel[chr][pos][ref] = {}
+        rc_for_indel[chr][pos][ref] = variant
     else:
         #it's a SNP
         if chr not in rc_for_snp:
