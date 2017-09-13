@@ -6,6 +6,7 @@ import re
 from cyvcf2 import VCF
 import tempfile
 import csv
+import binascii
 
 def parse_csq_header(vcf_file):
     for header in vcf_file.header_iter():
@@ -54,6 +55,10 @@ def transcript_for_alt(transcripts, alt):
         if transcript['PICK'] == '1':
             return transcript
     return transcripts[alt][0]
+
+def decode_hex(string):
+    hex_string = string.group(0).replace('%', '')
+    return binascii.unhexlify(hex_string).decode('utf-8')
 
 (script, tsv_filename, vcf_filename, vep_fields, output_dir) = sys.argv
 vep_fields_list = vep_fields.split(',')
@@ -104,7 +109,9 @@ with open(tsv_filename, 'r') as input_filehandle:
             for alt in entry['ALT'].split(','):
                 vep_annotations = vep[entry['CHROM']][entry['POS']][entry['REF']][alt]
                 if vep_annotations is not None and field in vep_annotations:
-                    field_annotations.append(vep_annotations[field])
+                    annotation = vep_annotations[field]
+                    decoded_annotation = re.sub(r'%[0-9|A-F][0-9|A-F]', decode_hex, annotation)
+                    field_annotations.append(decoded_annotation)
                 else:
                     field_annotations.append('-')
             row[field] = ','.join(field_annotations)
