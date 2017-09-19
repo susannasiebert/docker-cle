@@ -28,7 +28,7 @@ def parse_csq_entries(csq_entries, csq_fields):
         transcripts[transcript['Allele']].append(transcript)
     return transcripts
 
-def resolves_alleles(entry, csq_alleles):
+def resolve_alleles(entry, csq_alleles):
     alleles = {}
     if entry.is_indel:
         for alt in entry.ALT:
@@ -86,7 +86,7 @@ for variant in vcf_file:
     csq = variant.INFO.get('CSQ')
     if csq is not None:
         transcripts = parse_csq_entries(csq.split(','), csq_fields)
-    alleles_dict = resolves_alleles(variant, transcripts.keys())
+    alleles_dict = resolve_alleles(variant, transcripts.keys())
     for alt in alts:
         if alt not in vep[chr][pos][ref]:
             if transcripts is not None:
