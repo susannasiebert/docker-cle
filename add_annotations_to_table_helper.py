@@ -6,6 +6,7 @@ import re
 from cyvcf2 import VCF
 import tempfile
 import csv
+import binascii
 
 def parse_csq_header(vcf_file):
     for header in vcf_file.header_iter():
@@ -16,16 +17,48 @@ def parse_csq_header(vcf_file):
             return match.group(1).split('|')
 
 def parse_csq_entries(csq_entries, csq_fields):
-    transcripts = []
+    transcripts = {}
     for entry in csq_entries:
         values = entry.split('|')
         transcript = {}
         for key, value in zip(csq_fields, values):
             transcript[key] = value
-        transcripts.append(transcript)
+        if transcript['Allele'] not in transcripts.keys():
+            transcripts[transcript['Allele']] = []
+        transcripts[transcript['Allele']].append(transcript)
+    return transcripts
+
+def resolve_alleles(entry, csq_alleles):
+    alleles = {}
+    if entry.is_indel:
+        for alt in entry.ALT:
+            alt = str(alt)
+            if alt[0:1] != entry.REF[0:1]:
+                csq_allele = alt
+            elif alt[1:] == "":
+                csq_allele = '-'
+            else:
+                csq_allele = alt[1:]
+            alleles[alt] = csq_allele
+    elif entry.is_sv:
+        for alt in alts:
+            if len(alt) > len(entry.REF) and 'insertion' in csq_alleles:
+                alleles[alt] = 'insertion'
+    else:
+        for alt in entry.ALT:
+            alt = str(alt)
+            alleles[alt] = alt
+    return alleles
+
+def transcript_for_alt(transcripts, alt):
+    for transcript in transcripts[alt]:
         if transcript['PICK'] == '1':
             return transcript
-    return transcripts[0]
+    return transcripts[alt][0]
+
+def decode_hex(string):
+    hex_string = string.group(0).replace('%', '')
+    return binascii.unhexlify(hex_string).decode('utf-8')
 
 (script, tsv_filename, vcf_filename, vep_fields, output_dir) = sys.argv
 vep_fields_list = vep_fields.split(',')
@@ -39,6 +72,7 @@ for variant in vcf_file:
     chr = str(variant.CHROM)
     pos = str(variant.POS)
     ref = str(variant.REF)
+    alts = variant.ALT
 
     if chr not in vep:
         vep[chr] = {}
@@ -47,13 +81,20 @@ for variant in vcf_file:
         vep[chr][pos] = {}
 
     if ref not in vep[chr][pos]:
-        csq = variant.INFO.get('CSQ')
-        if csq is not None:
-            vep[chr][pos][ref] = parse_csq_entries(csq.split(','), csq_fields)
+        vep[chr][pos][ref] = {}
+
+    csq = variant.INFO.get('CSQ')
+    if csq is not None:
+        transcripts = parse_csq_entries(csq.split(','), csq_fields)
+    alleles_dict = resolve_alleles(variant, transcripts.keys())
+    for alt in alts:
+        if alt not in vep[chr][pos][ref]:
+            if transcripts is not None:
+                vep[chr][pos][ref][alt] = transcript_for_alt(transcripts, alleles_dict[alt])
+            else:
+                vep[chr][pos][ref][alt] = None
         else:
-            vep[chr][pos][ref] = None
-    else:
-        sys.exit("VEP entry for at CHR %s, POS %s, REF %s already exists" % (chr, pos, ref) )
+            sys.exit("VEP entry for at CHR %s, POS %s, REF %s , ALT % already exists" % (chr, pos, ref, alt) )
 
 
 with open(tsv_filename, 'r') as input_filehandle:
@@ -64,10 +105,15 @@ with open(tsv_filename, 'r') as input_filehandle:
     for entry in reader:
         row = entry
         for field in vep_fields_list:
-            vep_annotations = vep[entry['CHROM']][entry['POS']][entry['REF']]
-            if vep_annotations is not None and field in vep_annotations:
-                row[field] = vep_annotations[field]
-            else:
-                row[field] = '-'
+            field_annotations = []
+            for alt in entry['ALT'].split(','):
+                vep_annotations = vep[entry['CHROM']][entry['POS']][entry['REF']][alt]
+                if vep_annotations is not None and field in vep_annotations:
+                    annotation = vep_annotations[field]
+                    decoded_annotation = re.sub(r'%[0-9|A-F][0-9|A-F]', decode_hex, annotation)
+                    field_annotations.append(decoded_annotation)
+                else:
+                    field_annotations.append('-')
+            row[field] = ','.join(field_annotations)
         writer.writerow(row)
     output_filehandle.close()
