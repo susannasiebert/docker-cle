@@ -44,6 +44,10 @@ def resolve_alleles(entry, csq_alleles):
         for alt in alts:
             if len(alt) > len(entry.REF) and 'insertion' in csq_alleles:
                 alleles[alt] = 'insertion'
+            elif len(alt) < len(entry.REF) and 'deletion' in csq_alleles:
+                alleles[alt] = 'deletion'
+            elif len(csq_alleles) == 1:
+                alleles[alt] = list(csq_alleles)[0]
     else:
         for alt in entry.ALT:
             alt = str(alt)
