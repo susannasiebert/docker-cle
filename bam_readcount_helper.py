@@ -89,7 +89,13 @@ for variant in vcf_file:
 if len(rc_for_snp.keys()) > 0:
     region_file = generate_region_list(rc_for_snp)
     filter_sites_in_hash(region_file, bam_file, ref_fasta, sample, output_dir, False)
+else:
+    output_file = os.path.join(output_dir, sample + '_bam_readcount_snv.tsv')
+    open(output_file, 'w').close()
 
 if len(rc_for_indel.keys()) > 0:
     region_file = generate_region_list(rc_for_indel)
     filter_sites_in_hash(region_file, bam_file, ref_fasta, sample, output_dir, True)
+else:
+    output_file = os.path.join(output_dir, sample + '_bam_readcount_indel.tsv')
+    open(output_file, 'w').close()
