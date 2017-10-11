@@ -14,8 +14,8 @@ use warnings;
 
 use feature qw(say);
 
-die "Provide vep annotated vcf and output_dir" unless @ARGV == 2;
-my ($annotated_vcf, $outdir) = @ARGV;
+die "Provide vep annotated vcf and output_dir" unless @ARGV >= 2;
+my ($annotated_vcf, $outdir, $filter_flag) = @ARGV;
 
 my @coding_categories = qw(
     splice_acceptor_variant
@@ -38,7 +38,7 @@ my @coding_categories = qw(
     coding_sequence_variant
 );
 
-open (my $annotated_vcf_fh, $annotated_vcf) 
+open (my $annotated_vcf_fh, '-|', '/bin/gunzip', '-c', $annotated_vcf) 
     or die "couldn't open $annotated_vcf to read";
 open (my $annotated_filtered_vcf_fh, ">", "$outdir/annotated_filtered.vcf")
     or die "couldn't open annotated_filtered.vcf to write";
@@ -49,24 +49,29 @@ while (<$annotated_vcf_fh>) {
         say $annotated_filtered_vcf_fh $_;
     }
     else {
-        my @columns = split /\t/, $_;
-        my ($ref, $alt, $info) = map{$columns[$_]}(3, 4, 7);
-        my @alts = split /,/, $alt;
-        my ($caller) = $info =~ /;set=(\S+?);/;
+        if ($filter_flag and $filter_flag eq 'filter') {
+            my @columns = split /\t/, $_;
+            my ($ref, $alt, $info) = map{$columns[$_]}(3, 4, 7);
+            my @alts = split /,/, $alt;
+            my ($caller) = $info =~ /;set=(\S+?);/;
 
-        if (length($ref) == 1 and length($alts[0]) == 1) { #snvs
-            say $annotated_filtered_vcf_fh $_;
-        }
-        else {
-            if ($caller =~ /docm/) {
+            if (length($ref) == 1 and length($alts[0]) == 1) { #snvs
                 say $annotated_filtered_vcf_fh $_;
             }
             else {
-                my ($csq) = $info =~ /;CSQ=(\S+)/;
-                if (grep {$csq =~ /$_/}@coding_categories) {
+                if ($caller =~ /docm/) {
                     say $annotated_filtered_vcf_fh $_;
                 }
+                else {
+                    my ($csq) = $info =~ /;CSQ=(\S+)/;
+                    if (grep {$csq =~ /$_/}@coding_categories) {
+                        say $annotated_filtered_vcf_fh $_;
+                    }
+                }
             }
+        }
+        else {
+            say $annotated_filtered_vcf_fh $_;
         }
     }
 }
