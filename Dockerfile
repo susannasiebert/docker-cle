@@ -189,7 +189,7 @@ COPY Downstream.pm /opt/lib/perl/VEP/Plugins/Downstream.pm
 COPY Wildtype.pm /opt/lib/perl/VEP/Plugins/Wildtype.pm
 
 COPY add_annotations_to_table_helper.py /usr/bin/add_annotations_to_table_helper.py
-COPY annotated_vcf_filter.pl /usr/bin/annotated_vcf_filter.pl
+COPY docm_and_coding_indel_selection.pl /usr/bin/docm_and_coding_indel_selection.pl
 
 ################
 #bcftools 1.3.1#
