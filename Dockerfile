@@ -24,7 +24,9 @@ RUN apt-get update -y && apt-get install -y \
     libarchive-zip-perl \
     libapache-dbi-perl \
     curl \
-    ant
+    ant \
+    python3 \
+    python3-pip
 
 RUN apt-get update -y && apt-get install -y python-pip python-dev build-essential nodejs
 RUN pip install --upgrade pip
@@ -152,7 +154,7 @@ COPY bam_readcount_helper.py /usr/bin/bam_readcount_helper.py
 COPY add_bam_reacount_to_vcf_helper.py /usr/bin/add_bam_reacount_to_vcf_helper.py
 
 RUN pip install cyvcf2
-RUN pip install vcfpy
+RUN pip3 install vcfpy
 
 ##########
 #fpfilter#
