@@ -210,30 +210,14 @@ RUN make prefix=$BCFTOOLS_INSTALL_DIR && \
 WORKDIR /
 RUN rm -rf /tmp/bcftools-1.3.1
 
-##############
-#Picard 2.4.1#
-##############
-ENV picard_version 2.4.1
+###############
+#Picard 2.14.0#
+###############
+ENV picard_version 2.14.0
 
-# Install ant, git for building
-
-# Assumes Dockerfile lives in root of the git repo. Pull source files into
-# container
-RUN cd /usr/ && git config --global http.sslVerify false && git clone --recursive https://github.com/broadinstitute/picard.git && cd /usr/picard && git checkout tags/${picard_version}
+RUN mkdir /usr/picard
 WORKDIR /usr/picard
-
-# Clone out htsjdk. First turn off git ssl verification
-RUN git config --global http.sslVerify false && git clone https://github.com/samtools/htsjdk.git && cd htsjdk && git checkout tags/${picard_version} && cd ..
-
-# Build the distribution jar, clean up everything else
-RUN ant clean all && \
-    mv dist/picard.jar picard.jar && \
-    mv src/scripts/picard/docker_helper.sh docker_helper.sh && \
-    ant clean && \
-    rm -rf htsjdk && \
-    rm -rf src && \
-    rm -rf lib && \
-    rm build.xml
+RUN wget https://github.com/broadinstitute/picard/releases/download/${picard_version}/picard.jar
 
 COPY split_interval_list_helper.pl /usr/bin/split_interval_list_helper.pl
 
