@@ -24,7 +24,9 @@ RUN apt-get update -y && apt-get install -y \
     libarchive-zip-perl \
     libapache-dbi-perl \
     curl \
-    ant
+    ant \
+    python3 \
+    python3-pip
 
 RUN apt-get update -y && apt-get install -y python-pip python-dev build-essential nodejs
 RUN pip install --upgrade pip
@@ -149,10 +151,10 @@ RUN git clone https://github.com/genome/bam-readcount.git /tmp/bam-readcount-0.7
     ln -s /opt/bam-readcount/bin/bam-readcount /usr/bin/bam-readcount
 
 COPY bam_readcount_helper.py /usr/bin/bam_readcount_helper.py
-COPY add_bam_reacount_to_vcf_helper.py /usr/bin/add_bam_reacount_to_vcf_helper.py
+COPY add_bam_readcount_to_vcf_helper.py /usr/bin/add_bam_readcount_to_vcf_helper.py
 
 RUN pip install cyvcf2
-RUN pip install vcfpy
+RUN pip3 install vcfpy
 
 ##########
 #fpfilter#
