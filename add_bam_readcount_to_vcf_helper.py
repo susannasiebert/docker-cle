@@ -6,6 +6,7 @@ import re
 import vcfpy
 import tempfile
 import csv
+from collections import OrderedDict
 
 def parse_brct_field(brcts):
     parsed_brct = {}
@@ -85,9 +86,9 @@ new_header = vcfpy.Header(samples = vcf_reader.header.samples)
 for line in vcf_reader.header.lines:
     if not (line.key == 'FORMAT' and line.id in ['DP', 'AD', 'AF']):
         new_header.add_line(line)
-new_header.add_format_line({'ID': 'DP', 'Description': 'Read depth', 'Type': 'Integer', 'Number': '1'})
-new_header.add_format_line({'ID': 'AD', 'Description': 'Allelic depths for the ref and alt alleles in the order listed', 'Type': 'Integer', 'Number': 'R'})
-new_header.add_format_line({'ID': 'AF', 'Description': 'Variant-allele frequency for the alt alleles', 'Type': 'Float', 'Number': 'A'})
+new_header.add_format_line(OrderedDict([('ID', 'DP'), ('Number', '1'), ('Type', 'Integer'), ('Description', 'Read depth')]))
+new_header.add_format_line(OrderedDict([('ID', 'AD'), ('Number', 'R'), ('Type', 'Integer'), ('Description', 'Allelic depths for the ref and alt alleles in the order listed')]))
+new_header.add_format_line(OrderedDict([('ID', 'AF'), ('Number', 'A'), ('Type', 'Float'), ('Description', 'Variant-allele frequency for the alt alleles')]))
 
 vcf_writer = vcfpy.Writer.from_path(os.path.join(output_dir, 'annotated.bam_readcount.vcf.gz'), new_header)
 
@@ -113,12 +114,8 @@ for entry in vcf_reader:
             if ref_base in brct:
                 depth = read_counts[sample][chromosome][bam_readcount_position][ref_base]['depth']
             else:
-                #import pdb
-                #pdb.set_trace()
                 depth = ''
         else:
-            #import pdb
-            #pdb.set_trace()
             depth = ''
         entry.call_for_sample[sample].data['DP'] = depth
 
