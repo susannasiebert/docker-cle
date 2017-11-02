@@ -34,6 +34,7 @@ then
         --p-value $P_VALUE \
         --mpileup 1 \
         --output-vcf \
+        --variants \
         --vcf-sample-list $SAMPLE_LIST_FILE \
         > "$OUTPUT"
 else
@@ -47,6 +48,7 @@ else
         --min-reads2 $MIN_READS \
         --p-value $P_VALUE \
         --mpileup 1 \
+        --variants \
         --output-vcf \
         --vcf-sample-list $SAMPLE_LIST_FILE \
         > "$OUTPUT"
