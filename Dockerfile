@@ -173,6 +173,7 @@ RUN ln -s $HTSLIB_INSTALL_DIR/bin/tabix /usr/bin/tabix
 #docm#
 ######
 COPY docm_filter.pl /usr/bin/docm_filter.pl
+COPY single_sample_docm_filter.pl /usr/bin/single_sample_docm_filter.pl
 
 ########
 #VEP 87#
