@@ -54,7 +54,7 @@ def calculate_coverage(ref, var):
     return ref + var
 
 def calculate_vaf(var, depth):
-    return (var / int(depth)) * 100
+    return format((var / int(depth)) * 100, '.3f')
 
 def parse_to_bam_readcount(start, reference, alt):
     if len(alt) != len(reference):
@@ -114,9 +114,9 @@ for entry in vcf_reader:
             if ref_base in brct:
                 depth = read_counts[sample][chromosome][bam_readcount_position][ref_base]['depth']
             else:
-                depth = ''
+                depth = 0
         else:
-            depth = ''
+            depth = 0
         entry.call_for_sample[sample].data['DP'] = depth
 
         #AF - variant allele frequencies
@@ -135,9 +135,9 @@ for entry in vcf_reader:
                 if var_base in brct:
                     vafs.append(calculate_vaf(int(brct[var_base]), depth))
                 else:
-                    vafs.append('')
+                    vafs.append(0)
             else:
-                vafs.append('')
+                vafs.append(0)
         entry.call_for_sample[sample].data['AF'] = vafs
 
         #AD - ref, var1..varN counts
@@ -154,9 +154,9 @@ for entry in vcf_reader:
             if ref_base in brct:
                 ads.append(brct[ref_base])
             else:
-                ads.append('')
+                ads.append(0)
         else:
-            ads.append('')
+            ads.append(0)
         for alt in alts:
             if type(alt) is not str:
                 alt = alt.serialize()
@@ -170,9 +170,9 @@ for entry in vcf_reader:
                 if var_base in brct:
                     ads.append(brct[var_base])
                 else:
-                    ads.append('')
+                    ads.append(0)
             else:
-                ads.append('')
+                ads.append(0)
         entry.call_for_sample[sample].data['AD'] = ads
 
     vcf_writer.write_record(entry)
