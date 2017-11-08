@@ -23,6 +23,7 @@ RUN apt-get update -y && apt-get install -y \
     libarchive-extract-perl \
     libarchive-zip-perl \
     libapache-dbi-perl \
+    libmodule-build-perl \
     curl \
     ant \
     python3 \
@@ -187,7 +188,7 @@ RUN git clone https://github.com/Ensembl/ensembl-vep.git
 WORKDIR /opt/vep/ensembl-vep
 RUN git checkout postreleasefix/90
 
-RUN perl INSTALL.pl --NO_UPDATE --NO_HTSLIB
+RUN perl INSTALL.pl --NO_UPDATE
 
 WORKDIR /
 RUN ln -s /opt/vep/ensembl-vep/vep.pl /usr/bin/variant_effect_predictor.pl
