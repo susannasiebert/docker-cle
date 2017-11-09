@@ -191,7 +191,7 @@ RUN git checkout postreleasefix/90
 RUN perl INSTALL.pl --NO_UPDATE
 
 WORKDIR /
-RUN ln -s /opt/vep/ensembl-vep/vep.pl /usr/bin/variant_effect_predictor.pl
+RUN ln -s /opt/vep/ensembl-vep/vep /usr/bin/variant_effect_predictor.pl
 
 RUN mkdir -p /opt/lib/perl/VEP/Plugins
 COPY Downstream.pm /opt/lib/perl/VEP/Plugins/Downstream.pm
