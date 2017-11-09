@@ -23,6 +23,7 @@ RUN apt-get update -y && apt-get install -y \
     libarchive-extract-perl \
     libarchive-zip-perl \
     libapache-dbi-perl \
+    libmodule-build-perl \
     curl \
     ant \
     python3 \
@@ -30,6 +31,8 @@ RUN apt-get update -y && apt-get install -y \
 
 RUN apt-get update -y && apt-get install -y python-pip python-dev build-essential nodejs
 RUN pip install --upgrade pip
+
+RUN ln -s /usr/bin/unzip /bin/unzip
 
 ##########
 #GATK 3.6#
@@ -176,19 +179,19 @@ COPY docm_filter.pl /usr/bin/docm_filter.pl
 COPY single_sample_docm_filter.pl /usr/bin/single_sample_docm_filter.pl
 
 ########
-#VEP 87#
+#VEP 90#
 ########
 RUN mkdir /opt/vep/
 WORKDIR /opt/vep
 
 RUN git clone https://github.com/Ensembl/ensembl-vep.git
 WORKDIR /opt/vep/ensembl-vep
-RUN git checkout postreleasefix/87
+RUN git checkout postreleasefix/90
 
-RUN perl INSTALL.pl --NO_UPDATE --NO_HTSLIB
+RUN perl INSTALL.pl --NO_UPDATE
 
 WORKDIR /
-RUN ln -s /opt/vep/ensembl-vep/vep.pl /usr/bin/variant_effect_predictor.pl
+RUN ln -s /opt/vep/ensembl-vep/vep /usr/bin/variant_effect_predictor.pl
 
 RUN mkdir -p /opt/lib/perl/VEP/Plugins
 COPY Downstream.pm /opt/lib/perl/VEP/Plugins/Downstream.pm
