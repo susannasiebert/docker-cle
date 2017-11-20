@@ -5,29 +5,29 @@ LABEL \
     description="Image for tools used in the CLE"
 
 RUN apt-get update -y && apt-get install -y \
-    wget \
-    git \
-    unzip \
+    ant \
+    bioperl \
     bzip2 \
-    g++ \
-    make \
-    zlib1g-dev \
-    ncurses-dev \
-    perl-doc \
-    python \
-    rsync \
+    curl \
     default-jdk \
     default-jre \
-    bioperl \
+    git \
+    g++ \
     libfile-copy-recursive-perl \
     libarchive-extract-perl \
     libarchive-zip-perl \
     libapache-dbi-perl \
     libmodule-build-perl \
-    curl \
-    ant \
+    make \
+    ncurses-dev \
+    perl-doc \
+    python \
     python3 \
-    python3-pip
+    python3-pip \
+    rsync \
+    unzip \
+    wget \
+    zlib1g-dev
 
 RUN apt-get update -y && apt-get install -y python-pip python-dev build-essential nodejs
 RUN pip install --upgrade pip
