@@ -6,11 +6,14 @@ LABEL \
 
 RUN apt-get update -y && apt-get install -y \
     ant \
+    apt-utils \
     bioperl \
+    build-essential \
     bzip2 \
     curl \
     default-jdk \
     default-jre \
+    gcc-multilib \
     git \
     g++ \
     libfile-copy-recursive-perl \
@@ -18,10 +21,13 @@ RUN apt-get update -y && apt-get install -y \
     libarchive-zip-perl \
     libapache-dbi-perl \
     libmodule-build-perl \
+    libncurses5-dev \
     make \
     ncurses-dev \
+    nodejs \
     perl-doc \
     python \
+    python-dev \
     python3 \
     python3-pip \
     rsync \
@@ -113,6 +119,45 @@ RUN ./configure --with-htslib=$HTSLIB_INSTALL_DIR --prefix=$SAMTOOLS_INSTALL_DIR
 
 WORKDIR /
 RUN rm -rf /tmp/samtools-1.3.1
+
+#################
+#Sambamba v0.6.4#
+#################
+
+RUN mkdir /opt/sambamba/ \
+    && wget https://github.com/lomereiter/sambamba/releases/download/v0.6.4/sambamba_v0.6.4_linux.tar.bz2 \
+    && tar --extract --bzip2 --directory=/opt/sambamba --file=sambamba_v0.6.4_linux.tar.bz2 \
+    && ln -s /opt/sambamba/sambamba_v0.6.4 /usr/bin/sambamba
+
+############
+#BWA 0.7.15#
+############
+
+ENV BWA_VERSION 0.7.15
+
+RUN cd /tmp/ \
+    && wget -q http://downloads.sourceforge.net/project/bio-bwa/bwa-${BWA_VERSION}.tar.bz2 && tar xvf bwa-${BWA_VERSION}.tar.bz2 \
+    && cd /tmp/bwa-${BWA_VERSION} \
+    && sed -i 's/CFLAGS=\\t\\t-g -Wall -Wno-unused-function -O2/CFLAGS=-g -Wall -Wno-unused-function -O2 -static/' Makefile \
+    && make \
+    && cp /tmp/bwa-${BWA_VERSION}/bwa /usr/local/bin \
+    && rm -rf /tmp/bwa-${BWA_VERSION}
+
+###################
+#Samblaster 0.1.24#
+###################
+
+RUN cd /tmp/ \
+    && git clone https://github.com/GregoryFaust/samblaster.git \
+    && cd /tmp/samblaster \
+    && git checkout tags/v.0.1.24 \
+    && make \
+    && cp /tmp/samblaster/samblaster /usr/local/bin \
+    && rm -rf /tmp/samblaster
+
+# alignment helper scripts
+COPY alignment_helper.sh /usr/bin/alignment_helper.sh
+COPY markduplicates_helper.sh /usr/bin/markduplicates_helper.sh
 
 ################
 #Pindel 0.2.5b8#
