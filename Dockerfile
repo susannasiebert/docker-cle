@@ -5,29 +5,35 @@ LABEL \
     description="Image for tools used in the CLE"
 
 RUN apt-get update -y && apt-get install -y \
-    wget \
-    git \
-    unzip \
+    ant \
+    apt-utils \
+    bioperl \
+    build-essential \
     bzip2 \
-    g++ \
-    make \
-    zlib1g-dev \
-    ncurses-dev \
-    perl-doc \
-    python \
-    rsync \
+    curl \
     default-jdk \
     default-jre \
-    bioperl \
+    gcc-multilib \
+    git \
+    g++ \
     libfile-copy-recursive-perl \
     libarchive-extract-perl \
     libarchive-zip-perl \
     libapache-dbi-perl \
     libmodule-build-perl \
-    curl \
-    ant \
+    libncurses5-dev \
+    make \
+    ncurses-dev \
+    nodejs \
+    perl-doc \
+    python \
+    python-dev \
     python3 \
-    python3-pip
+    python3-pip \
+    rsync \
+    unzip \
+    wget \
+    zlib1g-dev
 
 RUN apt-get update -y && apt-get install -y python-pip python-dev build-essential nodejs
 RUN pip install --upgrade pip
@@ -113,6 +119,45 @@ RUN ./configure --with-htslib=$HTSLIB_INSTALL_DIR --prefix=$SAMTOOLS_INSTALL_DIR
 
 WORKDIR /
 RUN rm -rf /tmp/samtools-1.3.1
+
+#################
+#Sambamba v0.6.4#
+#################
+
+RUN mkdir /opt/sambamba/ \
+    && wget https://github.com/lomereiter/sambamba/releases/download/v0.6.4/sambamba_v0.6.4_linux.tar.bz2 \
+    && tar --extract --bzip2 --directory=/opt/sambamba --file=sambamba_v0.6.4_linux.tar.bz2 \
+    && ln -s /opt/sambamba/sambamba_v0.6.4 /usr/bin/sambamba
+
+############
+#BWA 0.7.15#
+############
+
+ENV BWA_VERSION 0.7.15
+
+RUN cd /tmp/ \
+    && wget -q http://downloads.sourceforge.net/project/bio-bwa/bwa-${BWA_VERSION}.tar.bz2 && tar xvf bwa-${BWA_VERSION}.tar.bz2 \
+    && cd /tmp/bwa-${BWA_VERSION} \
+    && sed -i 's/CFLAGS=\\t\\t-g -Wall -Wno-unused-function -O2/CFLAGS=-g -Wall -Wno-unused-function -O2 -static/' Makefile \
+    && make \
+    && cp /tmp/bwa-${BWA_VERSION}/bwa /usr/local/bin \
+    && rm -rf /tmp/bwa-${BWA_VERSION}
+
+###################
+#Samblaster 0.1.24#
+###################
+
+RUN cd /tmp/ \
+    && git clone https://github.com/GregoryFaust/samblaster.git \
+    && cd /tmp/samblaster \
+    && git checkout tags/v.0.1.24 \
+    && make \
+    && cp /tmp/samblaster/samblaster /usr/local/bin \
+    && rm -rf /tmp/samblaster
+
+# alignment helper scripts
+COPY alignment_helper.sh /usr/bin/alignment_helper.sh
+COPY markduplicates_helper.sh /usr/bin/markduplicates_helper.sh
 
 ################
 #Pindel 0.2.5b8#
@@ -215,6 +260,28 @@ RUN make prefix=$BCFTOOLS_INSTALL_DIR && \
 
 WORKDIR /
 RUN rm -rf /tmp/bcftools-1.3.1
+
+##############
+#Picard 2.4.1#
+##############
+ENV picard_version 2.4.1
+
+RUN cd /opt/ \
+    && git config --global http.sslVerify false \
+    && git clone --recursive https://github.com/broadinstitute/picard.git \
+    && cd picard \
+    && git checkout tags/${picard_version} \
+    && git clone https://github.com/samtools/htsjdk.git \
+    && cd htsjdk \
+    && git checkout tags/${picard_version} \
+    && cd .. \
+    && ant clean all  \
+    && mv dist/picard.jar picard.jar \
+    && ant clean \
+    && rm -rf htsjdk \
+    && rm -rf src \
+    && rm -rf lib \
+    && rm build.xml
 
 ###############
 #Picard 2.14.0#
