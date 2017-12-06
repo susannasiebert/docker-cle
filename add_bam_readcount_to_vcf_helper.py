@@ -54,7 +54,7 @@ def calculate_coverage(ref, var):
     return ref + var
 
 def calculate_vaf(var, depth):
-    return format((var / int(depth)) * 100, '.3f')
+    return format(var / int(depth), '.5f')
 
 def parse_to_bam_readcount(start, reference, alt):
     if len(alt) != len(reference):
