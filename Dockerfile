@@ -297,7 +297,7 @@ COPY split_interval_list_helper.pl /usr/bin/split_interval_list_helper.pl
 ######
 #Toil#
 ######
-RUN pip install toil[cwl]==3.6.0
+RUN pip install toil[cwl]==3.12.0
 RUN sed -i 's/select\[type==X86_64 && mem/select[mem/' /usr/local/lib/python2.7/dist-packages/toil/batchSystems/lsf.py
 
 RUN apt-get update -y && apt-get install -y libnss-sss tzdata
