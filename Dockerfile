@@ -298,7 +298,13 @@ COPY split_interval_list_helper.pl /usr/bin/split_interval_list_helper.pl
 #Toil#
 ######
 RUN pip install toil[cwl]==3.12.0
+RUN cd /tmp/ \
+    && wget --no-check-certificate https://raw.githubusercontent.com/tmooney/toil/3.12_lsf_fix/src/toil/batchSystems/lsfHelper.py \
+    && mv -f lsfHelper.py /usr/local/lib/python2.7/dist-packages/toil/batchSystems/ \
+    && wget --no-check-certificate https://raw.githubusercontent.com/tmooney/toil/3.12_lsf_fix/src/toil/batchSystems/lsf.py \
+    && mv -f lsf.py /usr/local/lib/python2.7/dist-packages/toil/batchSystems/
 RUN sed -i 's/select\[type==X86_64 && mem/select[mem/' /usr/local/lib/python2.7/dist-packages/toil/batchSystems/lsf.py
+
 
 RUN apt-get update -y && apt-get install -y libnss-sss tzdata
 RUN ln -sf /usr/share/zoneinfo/America/Chicago /etc/localtime
