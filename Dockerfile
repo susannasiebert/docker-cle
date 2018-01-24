@@ -336,3 +336,9 @@ RUN rm -rf /tmp/verifyBamID /tmp/libStatGen
 RUN apt-get update && apt-get install -y r-base littler
 
 RUN apt-get install -y lib32ncurses5 
+
+###########
+#vcf_check#
+###########
+
+COPY vcf_check.pl /usr/bin/vcf_check.pl
