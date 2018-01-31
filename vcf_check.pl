@@ -29,6 +29,8 @@ sub main {
 sub vcf_is_empty {
     my $vcf = shift;
 
+    local $SIG{PIPE} = sub { return 1; }; #prevent zgrep "broken pipe" errors
+
     my $is_compressed = $vcf =~ /\.gz$/;
 
     my $cmd = $is_compressed? 'zgrep' : 'grep';
