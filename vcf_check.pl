@@ -33,7 +33,7 @@ sub vcf_is_empty {
 
     my $is_compressed = $vcf =~ /\.gz$/;
 
-    my $cmd = $is_compressed? 'zgrep' : 'grep';
+    my $cmd = $is_compressed? '/bin/zgrep' : '/bin/grep';
 
     my $rv = system($cmd, '-q', '-v', '#', $vcf);
 
