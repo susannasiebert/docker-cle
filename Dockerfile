@@ -41,6 +41,16 @@ RUN pip install --upgrade pip
 RUN ln -s /usr/bin/unzip /bin/unzip
 
 ##########
+#GATK 3.5#
+##########
+
+RUN cd /tmp/ \
+    && wget -O /tmp/gatk3.5.tar.bz2 'https://software.broadinstitute.org/gatk/download/auth?package=GATK-archive&version=3.5-0-g36282e4' \
+    && tar xf gatk3.5.tar.bz2 \
+    && cp GenomeAnalysisTK.jar /opt/GenomeAnalysisTK-3.5.jar \
+    && rm -rf /tmp/*
+
+##########
 #GATK 3.6#
 ##########
 ENV maven_package_name apache-maven-3.3.9
