@@ -340,3 +340,10 @@ COPY vcf_check.pl /usr/bin/vcf_check.pl
 #############
 RUN wget --no-check-certificate https://github.com/fulcrumgenomics/fgbio/releases/download/0.5.0/fgbio-0.5.0.jar \
     && mv fgbio-0.5.0.jar /opt
+
+###############
+#umi alignment#
+###############
+
+COPY umi_alignment.sh /usr/bin/umi_alignment.sh
+COPY umi_realignment.sh /usr/bin/umi_realignment.sh
