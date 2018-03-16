@@ -6,7 +6,18 @@ use warnings;
 use feature qw(say);
 
 die("Wrong number of arguments. Provide docm_vcf, normal_sample_name, tumor_sample_name, output_dir") unless scalar(@ARGV) == 4;
-my ($docm_out_vcf, $normal_name, $tumor_name, $outdir) = @ARGV;
+my ($docm_out_vcf, $normal_cram, $tumor_cram, $outdir) = @ARGV;
+
+my $samtools = '/opt/samtools/bin/samtools';
+my $normal_header_str = `$samtools view -H $normal_cram`;
+my $tumor_header_str  = `$samtools view -H $tumor_cram`;
+
+my ($normal_name) = $normal_header_str =~ /\s+SM:(\S+)/;
+my ($tumor_name)  = $tumor_header_str =~ /\s+SM:(\S+)/;
+
+unless ($normal_name and $tumor_name) {
+    die "Failed to get normal_name: $normal_name from $normal_cram AND tumor_name: $tumor_name from $tumor_cram";
+}
 
 open(my $docm_vcf_fh, $docm_out_vcf)
     or die("couldn't open $docm_out_vcf to read");
@@ -28,7 +39,7 @@ while (<$docm_vcf_fh>) {
         );
         ($normal_index, $tumor_index) = map{$index{$_}}($normal_name, $tumor_name);
         unless ($normal_index and $tumor_index) {
-            die "Failed to get normal_index: $normal_index for $normal_name and tumor_index: $tumor_index for $tumor_name";
+            die "Failed to get normal_index: $normal_index for $normal_name AND tumor_index: $tumor_index for $tumor_name";
         }
         $columns[9]  = 'NORMAL';
         $columns[10] = 'TUMOR';
