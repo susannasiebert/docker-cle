@@ -5,7 +5,7 @@ use warnings;
 
 use feature qw(say);
 
-die("Wrong number of arguments. Provide docm_vcf, normal_sample_name, tumor_sample_name, output_dir") unless scalar(@ARGV) == 4;
+die("Wrong number of arguments. Provide docm_out_vcf, normal_cram, tumor_cram, output_dir") unless scalar(@ARGV) == 4;
 my ($docm_out_vcf, $normal_cram, $tumor_cram, $outdir) = @ARGV;
 
 my $samtools = '/opt/samtools/bin/samtools';
