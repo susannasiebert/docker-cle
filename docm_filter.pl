@@ -55,8 +55,9 @@ while (<$docm_vcf_fh>) {
         shift @AD; #the first one is ref count
         for my $ad (@AD) {
             if ($ad > 5 and $ad/$DP > 0.01) {
-                $columns[9]  = $columns[$normal_index];
-                $columns[10] = $columns[$tumor_index];
+                my ($normal_col, $tumor_col) = map{$columns[$_]}($normal_index, $tumor_index);
+                $columns[9]  = $normal_col;
+                $columns[10] = $tumor_col;
                 my $new_line = join "\t", @columns;
                 say $docm_filter_fh $new_line;
                 last;
