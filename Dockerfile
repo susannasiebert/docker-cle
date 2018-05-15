@@ -329,6 +329,10 @@ RUN apt-get update && apt-get install -y r-base littler
 
 RUN apt-get install -y lib32ncurses5 
 
+# Install R Packages
+RUN Rscript -e 'install.packages("ggplot2", repos="http://cran.us.r-project.org", dependencies=TRUE)'
+
+
 ###########
 #vcf_check#
 ###########
