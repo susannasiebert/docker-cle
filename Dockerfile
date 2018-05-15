@@ -271,38 +271,20 @@ RUN make prefix=$BCFTOOLS_INSTALL_DIR && \
 WORKDIR /
 RUN rm -rf /tmp/bcftools-1.3.1
 
-##############
-#Picard 2.4.1#
-##############
-ENV picard_version 2.4.1
-
-RUN cd /opt/ \
-    && git config --global http.sslVerify false \
-    && git clone --recursive https://github.com/broadinstitute/picard.git \
-    && cd picard \
-    && git checkout tags/${picard_version} \
-    && git clone https://github.com/samtools/htsjdk.git \
-    && cd htsjdk \
-    && git checkout tags/${picard_version} \
-    && cd .. \
-    && ant clean all  \
-    && mv dist/picard.jar picard.jar \
-    && ant clean \
-    && rm -rf htsjdk \
-    && rm -rf src \
-    && rm -rf lib \
-    && rm build.xml
 
 ###############
-#Picard 2.14.0#
+#Picard 2.18.1#
 ###############
-ENV picard_version 2.14.0
 
-RUN mkdir /usr/picard
-WORKDIR /usr/picard
-RUN wget https://github.com/broadinstitute/picard/releases/download/${picard_version}/picard.jar
+RUN mkdir /opt/picard-2.18.1/ \
+    && cd /tmp/ \
+    && wget --no-check-certificate https://github.com/broadinstitute/picard/releases/download/2.18.1/picard.jar \
+    && mv picard.jar /opt/picard-2.18.1/ \
+    && ln -s /opt/picard-2.18.1 /opt/picard \
+    && ln -s /opt/picard-2.18.1 /usr/picard
 
 COPY split_interval_list_helper.pl /usr/bin/split_interval_list_helper.pl
+
 
 ######
 #Toil#
