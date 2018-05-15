@@ -352,3 +352,9 @@ RUN apt-get install -y lib32ncurses5
 ###########
 
 COPY vcf_check.pl /usr/bin/vcf_check.pl
+
+#############
+#fgbio 0.5.0#
+#############
+RUN wget --no-check-certificate https://github.com/fulcrumgenomics/fgbio/releases/download/0.5.0/fgbio-0.5.0.jar \
+    && mv fgbio-0.5.0.jar /opt
