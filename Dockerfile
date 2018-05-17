@@ -212,6 +212,7 @@ COPY bam_readcount_helper.py /usr/bin/bam_readcount_helper.py
 COPY add_bam_readcount_to_vcf_helper.py /usr/bin/add_bam_readcount_to_vcf_helper.py
 
 RUN pip install cyvcf2
+RUN pip3 install pysam
 RUN pip3 install vcfpy
 
 ##########
